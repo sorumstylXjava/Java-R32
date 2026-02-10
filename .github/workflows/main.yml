@@ -9,13 +9,17 @@ jobs:
       - name: Checkout Source Kernel
         uses: actions/checkout@v4
 
-      - name: Setup Build Environment
+    - name: Setup Build Environment
         run: |
           sudo apt-get update
           sudo apt-get install -y bc build-essential flex bison lld libssl-dev libelf-dev \
-          ccache libncurses-dev git-lfs python2 python3 libncurses5
+          ccache libncurses-dev git-lfs python3 python3-dev libncurses6
 
-      - name: Eksekusi Script Build
+      - name: Fix Python 2 & Libncurses (The "Cheat Code")
+        run: |
+          sudo ln -sf /usr/bin/python3 /usr/bin/python
+          sudo apt-get install -y libncurses6
+      - name: Script Build
         run: |
           chmod +x build.sh
           ./build.sh
