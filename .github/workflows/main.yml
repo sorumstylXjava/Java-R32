@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Kernel
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Build Environment
         run: |
@@ -21,13 +21,13 @@ jobs:
           ./build.sh
 
       - name: Upload Image.gz-dtb
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Rosemary-Kernel-Image
           path: out/arch/arm64/boot/Image.gz-dtb
 
       - name: Upload DTB (Optional)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Rosemary-DTB
           path: out/arch/arm64/boot/dts/mediatek/*.dtb
