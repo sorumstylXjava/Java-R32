@@ -21,25 +21,28 @@ mkdir -p ${OUT_DIR}
 echo "--- Generating Rosemary Defconfig ---"
 make O=out ARCH=arm64 rosemary_defconfig
 
-echo "--- Memulai Siksaan Rosemary ---"
-# Pake LLVM=1 itu udah otomatis manggil llvm-nm, llvm-objcopy, dll.
-# Kita cuma perlu define CC, LD, dan CROSS_COMPILE-nya aja.
+# --- DEFINE TOOLCHAIN PATHS ---
+# Kita bikin variabel shortcut ke folder bin clang
+BIN="${CLANG_DIR}/bin"
+
+echo "--- Memulai Siksaan Rosemary dengan Jalur Absolut ---"
+
 make -j$(nproc --all) O=out \
     ARCH=arm64 \
-    CC=clang \
-    LD=ld.lld \
-    AR=llvm-ar \
-    NM=llvm-nm \
-    OBJCOPY=llvm-objcopy \
-    OBJDUMP=llvm-objdump \
-    STRIP=llvm-strip \
+    CC="${BIN}/clang" \
+    LD="${BIN}/ld.lld" \
+    AR="${BIN}/llvm-ar" \
+    NM="${BIN}/llvm-nm" \
+    OBJCOPY="${BIN}/llvm-objcopy" \
+    OBJDUMP="${BIN}/llvm-objdump" \
+    STRIP="${BIN}/llvm-strip" \
+    AS="${BIN}/llvm-as" \
     CLANG_TRIPLE=aarch64-linux-gnu- \
-    CROSS_COMPILE=aarch64-linux-gnu- \
-    CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
+    CROSS_COMPILE="${BIN}/aarch64-linux-gnu-" \
+    CROSS_COMPILE_ARM32="${BIN}/arm-linux-gnueabi-" \
     LLVM=1 \
-    LLVM_IAS=1 \
-    V=0 # Set V=1 kalo mau liat log super detail pas error
-
+    LLVM_IAS=1
+    
 if [ -f "${OUT_DIR}/arch/arm64/boot/Image.gz-dtb" ]; then
     echo "--- BUILD SUCCESSFUL ---"
 else
