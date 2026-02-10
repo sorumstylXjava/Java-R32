@@ -5,27 +5,21 @@ OUT_DIR="${ROOT_DIR}/out"
 
 if [ ! -d "${CLANG_DIR}" ]; then
     echo "--- Cloning LineageOS Clang for Rosemary ---"
-    git clone --depth=1 https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b -b lineage-19.1 "${CLANG_DIR}"
+    git clone --depth=1 https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b "${CLANG_DIR}"
 fi
 
-# Pastiin PATH absolut biar mantap
 export PATH="${CLANG_DIR}/bin:${PATH}"
 export ARCH=arm64
 export SUBARCH=arm64
 export KBUILD_BUILD_USER="Java"
 export KBUILD_BUILD_HOST="Java_nih_deks"
 
-# Bersihin out lama biar ga nyampah kalo di lokal
 mkdir -p ${OUT_DIR}
+
+BIN="${CLANG_DIR}/bin"
 
 echo "--- Generating Rosemary Defconfig ---"
 make O=out ARCH=arm64 rosemary_defconfig
-
-# --- DEFINE TOOLCHAIN PATHS ---
-# Kita bikin variabel shortcut ke folder bin clang
-BIN="${CLANG_DIR}/bin"
-
-echo "--- Memulai Siksaan Rosemary dengan Jalur Absolut ---"
 
 make -j$(nproc --all) O=out \
     ARCH=arm64 \
